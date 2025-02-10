@@ -14,9 +14,21 @@ import viewsRouter from './routes/viewsRouter.js';
 import __dirname from './utils/constantsUtil.js';
 import websocket from './websocket.js';
 
+dotenv.config();
+
 const app = express();
 
-const uri = 'mongodb://127.0.0.1:27017/entrega-final';
+const uri = process.env.MONGO.URI || 'mongodb://127.0.0.1:27017/entrega-final';
+
+mongoose
+    .connect((uri)
+    .then(() => {
+        console.log("Connected to the Database");
+    })
+    .catch((error) => {
+        console.log("Error Connecting to the database", error);
+    })
+);
 
 //Handlebars Config
 app.engine('handlebars', handlebars.engine());
@@ -31,15 +43,6 @@ initializePassport();
 app.use(passport.initialize());
 app.use(express.static('public'));
 
-mongoose
-    .connect((uri)
-    .then(() => {
-        console.log("Connected to the Database");
-    })
-    .catch(() => {
-        console.log("Error Connecting to the database", error);
-    })
-);
 
 //Routers
 app.use('/api/products', productRouter);

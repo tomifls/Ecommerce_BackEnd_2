@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { productDBManager } from '../dao/productDBManager.js';
 import { cartDBManager } from '../dao/cartDBManager.js';
+import { cartController } from '../controllers/cart.controller.js';
+import { isUser } from '../middlewares/authMiddleware.js';
 
 const router = Router();
 const ProductService = new productDBManager();
@@ -53,6 +55,11 @@ router.post('/:cid/product/:pid', async (req, res) => {
         });
     }
 });
+
+router.post("/:cid/purchase", 
+    isUser, 
+    cartController.purchase
+);
 
 router.delete('/:cid/product/:pid', async (req, res) => {
 
